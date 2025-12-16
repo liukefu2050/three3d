@@ -3,6 +3,7 @@ import { Three3D } from "@/utils/threeUtils/three";
 import { createAmbientLight } from "@/utils/threeUtils/lightThree";
 import {
   loadGltf,
+  loadGlb,
   getModel,
   loadFbx,
   Patrol,
@@ -157,6 +158,15 @@ const gltfModelList = [
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
   },
+  {
+    url: "glb/luowenmochuang.glb",
+    type: "glb",
+    name: "螺纹磨床",
+    playAction: "",
+    position: { x: -30, y: 0, z: 40 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: 5,
+  },
 /*
   {
     url: "gltf/road_1.gltf",
@@ -199,7 +209,11 @@ const addGltf = (modelList: any) => {
       loadGltf(gltfList.url, gltfList.name).then((gltf) => {
         setModel(gltf.scene, gltf.animations, gltfList);
       });
-    } else {
+    }else if (gltfList.type === "glb") {
+      loadGlb(gltfList.url, gltfList.name).then((gltf) => {
+        setModel(gltf.scene, gltf.animations, gltfList);
+      });
+    }  else {
       // 加载fbx模型
       loadFbx(gltfList.url, gltfList.name).then((fbx) => {
         setModel(fbx, fbx.animations, gltfList);

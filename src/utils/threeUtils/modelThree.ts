@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 interface Actions {
   [key: string]: THREE.AnimationAction;
@@ -73,6 +74,33 @@ export const loadGltf = (url: string, name: string): Promise<any> => {
   return new Promise((res, rej) => {
     const loaderGltf = new GLTFLoader();
     loaderGltf.load(
+      url,
+      (gltf: {
+        scene: THREE.Group<THREE.Object3DEventMap>;
+        animations: THREE.AnimationClip[];
+      }) => {
+        const { scene } = gltf;
+        scene.name = name;
+        res(gltf);
+      },
+      (xhr: ProgressEvent) => {
+        //console.log("加载进度：", Math.floor((xhr.loaded / xhr.total) * 100));
+      },
+      (err: any) => {
+        rej(err);
+      },
+    );
+  });
+};
+
+export const loadGlb = (url: string, name: string): Promise<any> => {
+  return new Promise((res, rej) => {
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.1/');
+    const loader = new GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
+
+    loader.load(
       url,
       (gltf: {
         scene: THREE.Group<THREE.Object3DEventMap>;
