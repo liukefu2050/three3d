@@ -29,13 +29,29 @@ const initThree = (id: string) => {
   threeTest = new Three3D(id).init();
   // threeTest.axesHelper(); // 辅助坐标
   threeTest.background(); //天空盒背景
-  threeTest.addScene(createAmbientLight("环境光")); // 环境光
-  // 创建一个地板
+  threeTest.addLight(createAmbientLight("环境光")); // 环境光
   const geometry = new THREE.CircleGeometry(500, 32);
   const material = new THREE.MeshBasicMaterial({ color: 0xbedaff });
   const circle = new THREE.Mesh(geometry, material);
   circle.rotateX(-Math.PI / 2);
+  circle.name = "地板";
   threeTest.addScene(circle);
+  const loader = new THREE.TextureLoader();
+  loader.load(
+    "/texture/floor_03.jpg",
+    (tex) => {
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(40, 40);
+      material.map = tex;
+      material.color.set(0xffffff);
+      material.needsUpdate = true;
+    },
+    undefined,
+    () => {
+      console.log("地板贴图加载失败，使用纯色材质");
+    },
+  );
   window.addEventListener("resize", resize);
   // 加载模型
   addGltf(gltfModelList); // 场景
@@ -141,7 +157,7 @@ const gltfModelList = [
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
   },
-
+/*
   {
     url: "gltf/road_1.gltf",
     type: "gltf",
@@ -150,7 +166,7 @@ const gltfModelList = [
     position: { x: 0, y: 0, z: 20 },
     rotation: { x: 0, y: (Math.PI / 180) * 90, z: 0 },
     scale: 1,
-  },
+  },*/
 ];
 
 // 加载场景模型

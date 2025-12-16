@@ -88,7 +88,7 @@ export class Three3D {
   addModel(mesh: Object3D<Object3DEventMap>, actions?: THREE.AnimationMixer[]) {
     this.modelGroup.add(mesh);
     if (actions) this.addActionsMixer(mesh.name, actions);
-    console.log(this.modelGroup);
+    //console.log(this.modelGroup);
   }
   // 添加光线
   addLight(mesh: any) {
@@ -97,7 +97,7 @@ export class Three3D {
   // 添加到场景
   addScene(mesh: any) {
     this.scene.add(mesh);
-    console.log(this.scene);
+    //console.log(this.scene);
   }
   // 辅助坐标系
   axesHelper() {

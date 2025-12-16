@@ -55,7 +55,7 @@ export const createPointLight = (
     decay = 2,
   } = pointLight || {};
   const { x = 0, y = 0, z = 0 } = Position || {};
-  console.log(color, intensity, distance, decay);
+  //console.log(color, intensity, distance, decay);
 
   const light = new THREE.PointLight(color, intensity, distance, decay);
   light.name = name;

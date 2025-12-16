@@ -83,7 +83,7 @@ export const loadGltf = (url: string, name: string): Promise<any> => {
         res(gltf);
       },
       (xhr: ProgressEvent) => {
-        console.log("加载进度：", Math.floor((xhr.loaded / xhr.total) * 100));
+        //console.log("加载进度：", Math.floor((xhr.loaded / xhr.total) * 100));
       },
       (err: any) => {
         rej(err);
@@ -102,7 +102,7 @@ export const loadFbx = (url: string, name: string): Promise<any> => {
         res(object);
       },
       (xhr: ProgressEvent) => {
-        console.log("加载进度：", Math.floor((xhr.loaded / xhr.total) * 100));
+        //console.log("加载进度：", Math.floor((xhr.loaded / xhr.total) * 100));
       },
       (err: any) => {
         rej(err);

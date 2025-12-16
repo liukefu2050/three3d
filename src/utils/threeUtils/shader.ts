@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 export const circleShader = (rgb?: [number, number, number]) => {
-  console.log(rgb);
+  //console.log(rgb);
 
   const vertexShader = `
   varying vec2 vUv;
