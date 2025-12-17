@@ -28,9 +28,19 @@ const resize = () => {
 
 const initThree = (id: string) => {
   threeTest = new Three3D(id).init();
-  // threeTest.axesHelper(); // 辅助坐标
+  threeTest.axesHelper(); // 辅助坐标
   threeTest.background(); //天空盒背景
   //threeTest.addLight(createAmbientLight("环境光")); // 环境光
+
+  // 添加环境光
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  threeTest.scene.add(ambientLight);
+
+  // 添加方向光
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 8);
+  directionalLight.position.set(10, 20, 15);
+  threeTest.scene.add(directionalLight);
+
   const geometry = new THREE.CircleGeometry(500, 32);
   const material = new THREE.MeshBasicMaterial({ color: 0xbedaff });
   const circle = new THREE.Mesh(geometry, material);
@@ -121,9 +131,9 @@ const gltfModelList = [
     type: "glb",
     name: "料仓平台",
     playAction: "",
-    position: { x: -40, y: 0, z: 0 },
-    rotation: { x: 0, y: 0.811, z: 0 },
-    scale: 1,
+    position: { x: -20, y: 0, z: 15 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: 2,
   },
 /*  {
     url: "gltf/workshop_1.gltf",
@@ -138,16 +148,16 @@ const gltfModelList = [
     type: "glb",
     name: "螺纹磨床",
     playAction: "",
-    position: { x: -20, y: 0, z: 0 },
+    position: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
-    scale: 1,
+    scale: 2,
   },
   {
     url: "glb/jianchepingtai.glb",
     type: "glb",
     name: "检测平台",
     playAction: "",
-    position: { x: 15, y: 0, z: 0 },
+    position: { x: 20, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
   },
@@ -184,8 +194,8 @@ const gltfModelList = [
     position: { x: 40, y: 0, z: 40 },
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
-  },*/
-/*  {
+  },
+  {
     url: "glb/luowenmochuang2.glb",
     type: "glb",
     name: "螺纹磨床",
@@ -193,8 +203,8 @@ const gltfModelList = [
     position: { x: -30, y: 0, z: 40 },
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
-  },*/
-/*
+  },
+
   {
     url: "gltf/road_1.gltf",
     type: "gltf",
@@ -204,6 +214,39 @@ const gltfModelList = [
     rotation: { x: 0, y: (Math.PI / 180) * 90, z: 0 },
     scale: 1,
   },*/
+];
+// 标签数组
+const labelList = [
+  {
+    color: "#3ac9b0",
+    name: "料仓平台标签",
+    value: "料仓平台",
+    position: {x: -20, y: 6, z: 15},
+    scale: 1,
+  },
+  {
+    color: "#3ac9b0",
+    name: "螺纹磨床标签",
+    value: "螺纹磨床",
+    position: { x: 0, y: 10, z: 0 },
+    scale: 1,
+  },
+  {
+    color: "#3ac9b0",
+    name: "检测平台标签",
+    value: "检测平台",
+    position: { x: 20, y: 6, z: 0 },
+    scale: 1,
+  },
+];
+
+// 围栏添加
+const faceList = [
+  { x: -2, y: 0.1, z: -2 },
+  { x: 2, y: 0.1, z: -2 },
+  { x: 2, y: 0.1, z: 2 },
+  { x: -2, y: 0.1, z: 2 },
+  { x: -2, y: 0.1, z: -2}
 ];
 
 // 加载场景模型
@@ -417,6 +460,20 @@ const patrolPartyList = ref([
     type: "fbx",
     name: "机器人2",
     playAction: "mixamo.com",
+/*
+  { x: -2, y: 0.1, z: -2 },
+  { x: 2, y: 0.1, z: -2 },
+  { x: 2, y: 0.1, z: -1 },
+  { x: -2, y: 0.1, z: -1 },
+  { x: -2, y: 0.1, z: -2}
+*/
+/*
+  { x: -26.69, y: 0.1, z: 14.62 }, 上角左顶点
+  { x: -15.78, y: 0.1, z: 15.53 }, 上角右顶点
+  { x: -15.37, y: 0.1, z: 32.6 },  下角右顶点
+  { x: -26.99, y: 0.1, z: 30.22 }, 下角左顶点
+  { x: -26.69, y: 0.1, z: 14.62 }, 上角左顶点
+*/
     position: { x: 10, y: 0, z: 40 },
     callback: personPatrol,
     scale: 0.01,
@@ -424,30 +481,6 @@ const patrolPartyList = ref([
   },
 ]);
 
-// 标签数组
-const labelList = [
-  {
-    color: "#3ac9b0",
-    name: "电箱标签",
-    value: "电箱",
-    position: { x: 40, y: 5, z: 40 },
-    scale: 1,
-  },
-  {
-    color: "#3ac9b0",
-    name: "办公楼标签",
-    value: "办公楼",
-    position: { x: -40, y: 15, z: 0 },
-    scale: 1,
-  },
-  {
-    color: "#3ac9b0",
-    name: "厂房标签",
-    value: "厂房",
-    position: { x: 50, y: 12, z: 0 },
-    scale: 1,
-  },
-];
 const addLabel = () => {
   labelList.forEach((label) => {
     const box = createLabel({
@@ -461,14 +494,6 @@ const addLabel = () => {
   });
 };
 
-// 围栏添加
-const faceList = [
-  { x: -26.69, y: 0.1, z: 14.62 },
-  { x: -15.78, y: 0.1, z: 15.53 },
-  { x: -15.37, y: 0.1, z: 32.6 },
-  { x: -26.99, y: 0.1, z: 30.22 },
-  { x: -26.69, y: 0.1, z: 14.62 },
-];
 const addFace = () => {
   const mesh = createFace(faceList, "rgb(51, 188, 176)");
   mesh.name = "围栏";
