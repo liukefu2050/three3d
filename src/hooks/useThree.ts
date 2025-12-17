@@ -30,7 +30,7 @@ const initThree = (id: string) => {
   threeTest = new Three3D(id).init();
   // threeTest.axesHelper(); // 辅助坐标
   threeTest.background(); //天空盒背景
-  threeTest.addLight(createAmbientLight("环境光")); // 环境光
+  //threeTest.addLight(createAmbientLight("环境光")); // 环境光
   const geometry = new THREE.CircleGeometry(500, 32);
   const material = new THREE.MeshBasicMaterial({ color: 0xbedaff });
   const circle = new THREE.Mesh(geometry, material);
@@ -57,7 +57,7 @@ const initThree = (id: string) => {
   // 加载模型
   addGltf(gltfModelList); // 场景
   addGltf(patrolPartyList.value); // 人物
-  copyModel(); // 同一模型模型批量加载 =>设备
+  //copyModel(); // 同一模型模型批量加载 =>设备
   // 加载标签
   addLabel();
   // 添加围栏
@@ -108,23 +108,50 @@ const copyModel = () => {
 
 // gltf模型数组
 const gltfModelList = [
-  {
+/*  {
     url: "gltf/office_1.gltf",
     type: "gltf",
     name: "办公楼",
     playAction: "",
     position: { x: -40, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
-  },
+  },*/
   {
+    url: "glb/liaochangpingtai.glb",
+    type: "glb",
+    name: "料仓平台",
+    playAction: "",
+    position: { x: -40, y: 0, z: 0 },
+    rotation: { x: 0, y: 0.811, z: 0 },
+    scale: 1,
+  },
+/*  {
     url: "gltf/workshop_1.gltf",
     type: "gltf",
     name: "厂房",
     playAction: "",
     position: { x: 50, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
+  },*/
+  {
+    url: "glb/luowenmochuang2.glb",
+    type: "glb",
+    name: "螺纹磨床",
+    playAction: "",
+    position: { x: -20, y: 0, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: 1,
   },
   {
+    url: "glb/jianchepingtai.glb",
+    type: "glb",
+    name: "检测平台",
+    playAction: "",
+    position: { x: 15, y: 0, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: 1,
+  },
+/*  {
     url: "gltf/street_lamp.gltf",
     type: "gltf",
     name: "路灯1",
@@ -157,16 +184,16 @@ const gltfModelList = [
     position: { x: 40, y: 0, z: 40 },
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
-  },
-  {
-    url: "glb/luowenmochuang.glb",
+  },*/
+/*  {
+    url: "glb/luowenmochuang2.glb",
     type: "glb",
     name: "螺纹磨床",
     playAction: "",
     position: { x: -30, y: 0, z: 40 },
     rotation: { x: 0, y: 0, z: 0 },
-    scale: 5,
-  },
+    scale: 1,
+  },*/
 /*
   {
     url: "gltf/road_1.gltf",

@@ -102,7 +102,7 @@ const clickDevice = (v: any) => {
     </div>
     <div class="centre">
       <div class="left box">
-        <Card class="card-box">
+<!--        <Card class="card-box">
           <template #title>
             <div class="title">数据统计</div>
           </template>
@@ -132,18 +132,18 @@ const clickDevice = (v: any) => {
           <div class="device-online">
             <div id="distribute" />
           </div>
-        </Card>
+        </Card>-->
       </div>
       <div class="three">
         <div id="office" />
       </div>
       <div class="right box">
-        <Card class="card-box">
+<!--        <Card class="card-box">
           <template #title>
             <div class="title">巡逻人员</div>
           </template>
           <div class="list">
-            <!-- <div id="distribute" /> -->
+            &lt;!&ndash; <div id="distribute" /> &ndash;&gt;
             <div class="people">
               <div
                 class="item"
@@ -162,7 +162,7 @@ const clickDevice = (v: any) => {
             <div class="title">设备列表</div>
           </template>
           <div class="list">
-            <!-- <div id="distribute" /> -->
+            &lt;!&ndash; <div id="distribute" /> &ndash;&gt;
             <div class="people">
               <div
                 class="item"
@@ -192,7 +192,7 @@ const clickDevice = (v: any) => {
               <div class="item" v-for="item in 20" :key="item">设备告警</div>
             </div>
           </div>
-        </Card>
+        </Card>-->
       </div>
     </div>
     <div class="control">
