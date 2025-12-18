@@ -72,13 +72,13 @@ const initThree = (id: string) => {
   // 加载标签
   addLabel();
   // 添加围栏
-  addFace(faceList);
+  addFace(faceList, "围栏");
 
   // 添加围栏1
-  addFace(faceList1);
+  addFace(faceList1, "围栏1");
 
   //添加围栏2
-  addFace(faceList2);
+  addFace(faceList2, "围栏2");
 };
 
 // 加载设备模型
@@ -140,7 +140,7 @@ const gltfModelList = [
     playAction: "",
     position: { x: -20, y: 0, z: 15 },
     rotation: { x: 0, y: 0, z: 0 },
-    scale: 2,
+    scale: 1,
   },
 /*  {
     url: "gltf/workshop_1.gltf",
@@ -157,7 +157,7 @@ const gltfModelList = [
     playAction: "",
     position: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
-    scale: 2,
+    scale: 1,
   },
   {
     url: "glb/jianchepingtai.glb",
@@ -166,7 +166,7 @@ const gltfModelList = [
     playAction: "",
     position: { x: 20, y: 0, z: 1.5 },
     rotation: { x: 0, y: 0, z: 0 },
-    scale: 1,
+    scale: 0.5,
   },
 /*  {
     url: "gltf/street_lamp.gltf",
@@ -319,7 +319,7 @@ const addGltf = (modelList: any) => {
 
 // 这里将Patrol放外面为了控制暂停和播放
 let p: Patrol;
-const inFace = ref(false);
+const currentFence = ref("");
 const isFirstPerson = ref(false);
 let time: string | number | NodeJS.Timeout | undefined;
 const personPatrol = (threeTest: Three3D) => {
@@ -354,29 +354,74 @@ const personPatrol = (threeTest: Three3D) => {
         p.reset();
         p.run();
       } else {
-        const flag = pointInThis(value, faceList);
-        if (flag === inFace.value) return;
-        inFace.value = flag;
-        if (inFace.value) {
-          setGeometryStyle("围栏", "rgb(255, 64, 95)", threeTest);
+        let foundFence = "";
+        if (pointInThis(value, faceList)) foundFence = "围栏";
+        else if (pointInThis(value, faceList1)) foundFence = "围栏1";
+        else if (pointInThis(value, faceList2)) foundFence = "围栏2";
 
-          ElMessage({
-            message: "进入围栏,暂停五秒",
-            type: "warning",
-            offset: 64,
-          });
+        if (foundFence) {
+          if (currentFence.value !== foundFence) {
+            if (currentFence.value) {
+              setGeometryStyle(currentFence.value, "rgb(51, 188, 176)", threeTest);
+              ElMessage({
+                message: `离开${currentFence.value}`,
+                type: "success",
+                offset: 64,
+              });
+            }
+            currentFence.value = foundFence;
+            setGeometryStyle(currentFence.value, "rgb(255, 64, 95)", threeTest);
 
-          showPatrol();
-          time = setTimeout(() => {
+            ElMessage({
+              message: `进入${currentFence.value},暂停五秒`,
+              type: "warning",
+              offset: 64,
+            });
+
+            if (foundFence === "围栏") {
+              const robot = getModel("机器人1", threeTest.scene);
+              const target = getModel("螺纹磨床", threeTest.scene);
+              if (robot && target) {
+                const box = new THREE.Box3().setFromObject(target);
+                const center = box.getCenter(new THREE.Vector3());
+                robot.lookAt(center.x, robot.position.y, center.z);
+                robot.rotation.y += Math.PI;
+              }
+            } else if (foundFence === "围栏1") {
+              const robot = getModel("机器人1", threeTest.scene);
+              const target = getModel("料仓平台", threeTest.scene);
+              if (robot && target) {
+                const box = new THREE.Box3().setFromObject(target);
+                const center = box.getCenter(new THREE.Vector3());
+                robot.lookAt(center.x, robot.position.y, center.z);
+                robot.rotation.y += Math.PI;
+              }
+            } else if (foundFence === "围栏2") {
+              const robot = getModel("机器人1", threeTest.scene);
+              const target = getModel("检测平台", threeTest.scene);
+              if (robot && target) {
+                const box = new THREE.Box3().setFromObject(target);
+                const center = box.getCenter(new THREE.Vector3());
+                robot.lookAt(center.x, robot.position.y, center.z);
+                robot.rotation.y += Math.PI;
+              }
+            }
+
             showPatrol();
-          }, 5000);
+            time = setTimeout(() => {
+              showPatrol();
+            }, 5000);
+          }
         } else {
-          ElMessage({
-            message: "离开围栏",
-            type: "success",
-            offset: 64,
-          });
-          setGeometryStyle("围栏", "rgb(51, 188, 176)", threeTest);
+          if (currentFence.value) {
+            ElMessage({
+              message: `离开${currentFence.value}`,
+              type: "success",
+              offset: 64,
+            });
+            setGeometryStyle(currentFence.value, "rgb(51, 188, 176)", threeTest);
+            currentFence.value = "";
+          }
         }
       }
     },
@@ -510,7 +555,7 @@ const patrolPartyList = ref([
 */
     position: {  x: -5.66, y: 0.1, z: 14.78 },
     callback: personPatrol,
-    scale: 0.01,
+    scale: 0.03,
     rotation: { x: 0, y: 0, z: 0 },
   },
 ]);
@@ -528,10 +573,10 @@ const addLabel = () => {
   });
 };
 
-const addFace = (faceList: Vector3[]) => {
+const addFace = (faceList: Vector3[], name: string = "围栏") => {
   const mesh = createFace(faceList, "rgb(51, 188, 176)");
-  mesh.name = "围栏";
-  console.log("围栏顶点位置数据", mesh.geometry.attributes.position);
+  mesh.name = name;
+  console.log(`${name}顶点位置数据`, mesh.geometry.attributes.position);
   mesh.rotation.x = Math.PI / 2;
   mesh.position.y = 0.1;
   threeTest.addScene(mesh);

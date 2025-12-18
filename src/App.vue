@@ -140,7 +140,7 @@ const clickDevice = (v: any) => {
       <div class="right box">
         <Card class="card-box">
           <template #title>
-            <div class="title">巡逻人员</div>
+            <div class="title">工作人员</div>
           </template>
           <div class="list">
             <!-- <div id="distribute" /> -->
