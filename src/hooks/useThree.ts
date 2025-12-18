@@ -168,6 +168,15 @@ const gltfModelList = [
     rotation: { x: 0, y: 0, z: 0 },
     scale: 0.5,
   },
+  {
+    url: "glb/shuzixianshipingtai.glb",
+    type: "glb",
+    name: "数字显示平台",
+    playAction: "",
+    position: { x: 40, y: 0, z: 40 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: 1,
+  },
 /*  {
     url: "gltf/street_lamp.gltf",
     type: "gltf",
@@ -274,6 +283,31 @@ const faceList2 = [
   { x:18,y:0.1,z:-1}
 ] as Vector3[];
 
+const moveDoor = (
+  door: THREE.Mesh,
+  originalPosition: THREE.Vector3,
+  offset: { x: number; y: number; z: number },
+  duration: number
+) => {
+  const startPosition = door.position.clone();
+  const targetPosition = originalPosition.clone().add(new THREE.Vector3(offset.x, offset.y, offset.z));
+  const startTime = performance.now();
+
+  const animateMove = (currentTime: number) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+
+    // 线性插值计算当前位置
+    door.position.lerpVectors(startPosition, targetPosition, progress);
+
+    if (progress < 1) {
+      requestAnimationFrame(animateMove);
+    }
+  };
+
+  requestAnimationFrame(animateMove);
+};
+
 // 加载场景模型
 const actionsMap = new Map(); // 动画
 const setModel = (model: any, animations: any, params: any) => {
@@ -297,6 +331,31 @@ const setModel = (model: any, animations: any, params: any) => {
     params.callback(threeTest);
   }
 };
+const addVideo = (model: THREE.Object3D, videoUrl: string) => {
+  const video = document.createElement("video");
+  video.src = videoUrl;
+  video.loop = true;
+  video.muted = true;
+  video.play();
+  const texture = new THREE.VideoTexture(video);
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.format = THREE.RGBAFormat;
+
+  model.traverse((child: any) => {
+    if (child.isMesh) {
+       console.log("数字显示平台子Mesh:", child.name);
+       // 优先匹配包含 "屏幕", "screen", "display" 的Mesh
+       if (child.name.includes("显示器") || child.name.toLowerCase().includes("screen") || child.name.toLowerCase().includes("display")) {
+          child.material = new THREE.MeshBasicMaterial({ map: texture });
+          // 调整纹理方向，视频通常需要翻转Y轴或者调整UV，视模型而定
+          // child.material.map.flipY = false; 
+          // found = true;
+       }
+    }
+  });
+};
+
 const addGltf = (modelList: any) => {
   modelList.forEach((gltfList: any) => {
     // 加载gltf模型
@@ -307,6 +366,9 @@ const addGltf = (modelList: any) => {
     }else if (gltfList.type === "glb") {
       loadGlb(gltfList.url, gltfList.name).then((gltf) => {
         setModel(gltf.scene, gltf.animations, gltfList);
+        if (gltfList.name === "数字显示平台") {
+            addVideo(gltf.scene, "/video/bi.mp4");
+        }
       });
     }  else {
       // 加载fbx模型
@@ -386,6 +448,32 @@ const personPatrol = (threeTest: Three3D) => {
                 const center = box.getCenter(new THREE.Vector3());
                 robot.lookAt(center.x, robot.position.y, center.z);
                 robot.rotation.y += Math.PI;
+
+                // 开门动画
+                const leftDoor = target.getObjectByName("前操作箱-1.001") as THREE.Mesh;
+                const rightDoor = target.getObjectByName("前操作箱-1.001") as THREE.Mesh;
+                
+                if (leftDoor && rightDoor) {
+                   // 初始化左门位置
+                   const leftOriginalPos = leftDoor.userData.originalPosition || leftDoor.position.clone();
+                   if (!leftDoor.userData.originalPosition) leftDoor.userData.originalPosition = leftOriginalPos;
+
+                   // 初始化右门位置
+                   const rightOriginalPos = rightDoor.userData.originalPosition || rightDoor.position.clone();
+                   if (!rightDoor.userData.originalPosition) rightDoor.userData.originalPosition = rightOriginalPos;
+
+                   // 开门：左门向左移(-x)，右门向右移(+x)
+                   moveDoor(leftDoor, leftOriginalPos, { x: 0.8, y: 0, z: 0 }, 1000);
+                   moveDoor(rightDoor, rightOriginalPos, { x: -0.8, y: 0, z: 0 }, 1000);
+
+                   // 2秒后关门
+                   setTimeout(() => {
+                      moveDoor(leftDoor, leftOriginalPos, { x: 0, y: 0, z: 0 }, 1000);
+                      moveDoor(rightDoor, rightOriginalPos, { x: 0, y: 0, z: 0 }, 1000);
+                   }, 2000);
+                } else {
+                   console.log("未找到左侧门或右侧门", target);
+                }
               }
             } else if (foundFence === "围栏1") {
               const robot = getModel("机器人1", threeTest.scene);
