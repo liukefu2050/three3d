@@ -19,6 +19,7 @@ import DeviceSpriteDom from "@/utils/createDom/device";
 import { circleShader } from "@/utils/threeUtils/shader";
 import * as THREE from "three";
 import TWEEN from "@tweenjs/tween.js";
+import {Vector3} from "three";
 let threeTest: Three3D;
 
 const resize = () => {
@@ -71,7 +72,13 @@ const initThree = (id: string) => {
   // 加载标签
   addLabel();
   // 添加围栏
-  addFace();
+  addFace(faceList);
+
+  // 添加围栏1
+  addFace(faceList1);
+
+  //添加围栏2
+  addFace(faceList2);
 };
 
 // 加载设备模型
@@ -157,7 +164,7 @@ const gltfModelList = [
     type: "glb",
     name: "检测平台",
     playAction: "",
-    position: { x: 20, y: 0, z: 0 },
+    position: { x: 20, y: 0, z: 1.5 },
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
   },
@@ -242,12 +249,30 @@ const labelList = [
 
 // 围栏添加
 const faceList = [
-  { x: -2, y: 0.1, z: -2 },
-  { x: 2, y: 0.1, z: -2 },
-  { x: 2, y: 0.1, z: 2 },
-  { x: -2, y: 0.1, z: 2 },
-  { x: -2, y: 0.1, z: -2}
-];
+  { x: -1, y: 0.1, z: -1 },
+  { x: 1, y: 0.1, z: -1 },
+  { x: 1, y: 0.1, z: 1 },
+  { x: -1, y: 0.1, z: 1 },
+  { x: -1, y: 0.1, z: -1}
+] as Vector3[];
+
+// 围栏添加1
+const faceList1 = [
+  { x:-19,y:0.1,z:14},
+  { x:-17,y:0.1,z:14},
+  { x:-17,y:0.1,z:15},
+  { x:-19,y:0.1,z:15},
+  { x:-19,y:0.1,z:14}
+] as Vector3[];
+
+// 围栏添加2
+const faceList2 = [
+  { x:18,y:0.1,z:-1},
+  { x:21,y:0.1,z:-1},
+  { x:21,y:0.1,z:1},
+  { x:18,y:0.1,z:1},
+  { x:18,y:0.1,z:-1}
+] as Vector3[];
 
 // 加载场景模型
 const actionsMap = new Map(); // 动画
@@ -299,15 +324,14 @@ const isFirstPerson = ref(false);
 let time: string | number | NodeJS.Timeout | undefined;
 const personPatrol = (threeTest: Three3D) => {
   const array = [
-    { x: -55.08, y: 0.1, z: 15.45 },
     { x: -5.66, y: 0.1, z: 14.78 },
-    { x: -5.3, y: 0.1, z: -7.37 },
-    { x: 4.15, y: 0.1, z: -7.55 },
-    { x: 5.03, y: 0.1, z: 20.44 },
-    { x: 57.4, y: 0.1, z: 22.28 },
-    { x: 57.19, y: 0.1, z: 33.91 },
-    { x: -48.2, y: 0.1, z: 30.5 },
-    { x: -55.08, y: 0.1, z: 15.45 },
+    { x:-17.94,y:0.1,z:15.14},
+    { x:-3.82,y:0.1,z:-0.39},
+    { x:0,y:0.1,z:0},
+    { x:19.41,y:0.1,z:0.55},
+    { x:13.71,y:0.1,z:0},
+    {x:5.67,y:0.1,z:7.41},
+    { x: -5.66, y: 0.1, z: 14.78 },
   ];
   const lint = createLine(array, "线1");
   lint.visible = false;
@@ -473,8 +497,18 @@ const patrolPartyList = ref([
   { x: -15.37, y: 0.1, z: 32.6 },  下角右顶点
   { x: -26.99, y: 0.1, z: 30.22 }, 下角左顶点
   { x: -26.69, y: 0.1, z: 14.62 }, 上角左顶点
+
+    { x: -55.08, y: 0.1, z: 15.45 },
+    { x: -5.66, y: 0.1, z: 14.78 },
+    { x: -5.3, y: 0.1, z: -7.37 },
+    { x: 4.15, y: 0.1, z: -7.55 },
+    { x: 5.03, y: 0.1, z: 20.44 },
+    { x: 57.4, y: 0.1, z: 22.28 },
+    { x: 57.19, y: 0.1, z: 33.91 },
+    { x: -48.2, y: 0.1, z: 30.5 },
+    { x: -55.08, y: 0.1, z: 15.45 },
 */
-    position: { x: 10, y: 0, z: 40 },
+    position: {  x: -5.66, y: 0.1, z: 14.78 },
     callback: personPatrol,
     scale: 0.01,
     rotation: { x: 0, y: 0, z: 0 },
@@ -494,7 +528,7 @@ const addLabel = () => {
   });
 };
 
-const addFace = () => {
+const addFace = (faceList: Vector3[]) => {
   const mesh = createFace(faceList, "rgb(51, 188, 176)");
   mesh.name = "围栏";
   console.log("围栏顶点位置数据", mesh.geometry.attributes.position);
