@@ -138,12 +138,12 @@ const clickDevice = (v: any) => {
         <div id="office" />
       </div>
       <div class="right box">
-        <Card class="card-box">
+<!--        <Card class="card-box">
           <template #title>
             <div class="title">工作人员</div>
           </template>
           <div class="list">
-            <!-- <div id="distribute" /> -->
+            &lt;!&ndash; <div id="distribute" /> &ndash;&gt;
             <div class="people">
               <div
                 class="item"
@@ -156,7 +156,7 @@ const clickDevice = (v: any) => {
               </div>
             </div>
           </div>
-        </Card>
+        </Card>-->
 <!--        <Card class="card-box">
           <template #title>
             <div class="title">设备列表</div>

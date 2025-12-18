@@ -54,7 +54,7 @@ const initThree = (id: string) => {
     (tex) => {
       tex.wrapS = THREE.RepeatWrapping;
       tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(40, 40);
+      tex.repeat.set(20, 20);
       material.map = tex;
       material.color.set(0xffffff);
       material.needsUpdate = true;
@@ -68,7 +68,7 @@ const initThree = (id: string) => {
   // 加载模型
   addGltf(gltfModelList); // 场景
   addGltf(patrolPartyList.value); // 人物
-  //copyModel(); // 同一模型模型批量加载 =>设备
+  copyModel(); // 同一模型模型批量加载 =>设备
   // 加载标签
   addLabel();
   // 添加围栏
@@ -87,12 +87,12 @@ const copyModel = () => {
   // 生成6行12列设备
   let id = 0;
   for (let i = 0; i < 6; i++) {
-    for (let j = 0; j < 12; j++) {
+    for (let j = 0; j < 6; j++) {
       id++;
       deviceList.value.push({
         id: id,
         name: `设备${id}`,
-        position: { x: 25 + j * 4, y: 0.1, z: -12 + i * 4 },
+        position: { x: 25 + j * 8, y: 0.1, z: -12 + i * 4 },
         rotation: { x: 0, y: 0, z: 0 },
         state: Math.round(Math.random()),
       });
@@ -125,14 +125,14 @@ const copyModel = () => {
 
 // gltf模型数组
 const gltfModelList = [
-/*  {
+  {
     url: "gltf/office_1.gltf",
     type: "gltf",
     name: "办公楼",
     playAction: "",
     position: { x: -40, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
-  },*/
+  },
   {
     url: "glb/liaochangpingtai.glb",
     type: "glb",
@@ -177,7 +177,7 @@ const gltfModelList = [
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
   },
-/*  {
+  {
     url: "gltf/street_lamp.gltf",
     type: "gltf",
     name: "路灯1",
@@ -211,17 +211,7 @@ const gltfModelList = [
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
   },
-  {
-    url: "glb/luowenmochuang2.glb",
-    type: "glb",
-    name: "螺纹磨床",
-    playAction: "",
-    position: { x: -30, y: 0, z: 40 },
-    rotation: { x: 0, y: 0, z: 0 },
-    scale: 1,
-  },
-
-  {
+  /*{
     url: "gltf/road_1.gltf",
     type: "gltf",
     name: "路2",
